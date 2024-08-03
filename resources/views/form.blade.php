@@ -16,31 +16,33 @@
 
 <body>
     <div class="container">
-        <form action="{{ route('form-submit') }}" class="w-50 p-5">
+        <form action="{{ route('form-submit') }}" method="POST" class="w-50 p-5">
+            @csrf
             <div class="row mb-3">
                 <label for="input-name" class="col-sm-2 col-form-label">Name</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="input-name">
+                    <input type="text" name="username" class="form-control" id="input-name">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="input-email" class="col-sm-2 col-form-label">Email</label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control" id="input-email">
+                    <input type="email" name="email" class="form-control" id="input-email">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="input-phone" class="col-sm-2 col-form-label">Phone number</label>
                 <div class="col-sm-10">
-                    <input type="tel" class="form-control" id="input-phone">
+                    <input type="tel" name="phone" class="form-control" id="input-phone">
                 </div>
             </div>
             <div class="row mb-3">
                 <label for="input-price" class="col-sm-2 col-form-label">Price</label>
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" id="input-price">
+                    <input type="number" name="price" class="form-control" id="input-price">
                 </div>
             </div>
+            <input type="hidden" id="spent_more_than_30s" name="spent_more_than_30s" value="0">
 
             <button type="submit" class="btn btn-primary">Отправить</button>
         </form>
@@ -48,6 +50,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+
+    <script>
+        setTimeout(() => {
+            document.getElementById('spent_more_than_30s').value = '1';
+        }, 30000);
     </script>
 </body>
 
