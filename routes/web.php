@@ -19,6 +19,10 @@ Route::get('/', function () {
 });
 
 
-Route::get('/form-submit', [AmoAPIController::class, 'index'])->name('form-submit');
+Route::get('/form', [AmoAPIController::class, 'index'])->name('form');
+Route::post('/form-submit', [AmoAPIController::class, 'formSubmit'])->name('form-submit');
+
 Route::get('/leads', [AmoAPIController::class, 'getAllLeads'])->name('leads');
 
+Route::post('/lead_add', [AmoAPIController::class, 'leadAdd'])->name('lead-add');
+Route::post('/contact_add', [AmoAPIController::class, 'contactAdd'])->name('contact-add');
