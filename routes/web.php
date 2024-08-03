@@ -22,7 +22,15 @@ Route::get('/', function () {
 Route::get('/form', [AmoAPIController::class, 'index'])->name('form');
 Route::post('/form-submit', [AmoAPIController::class, 'formSubmit'])->name('form-submit');
 
+Route::get('/amocrm-form', [AmoAPIController::class, 'formShow'])->name('amocrm.form');
+Route::post('/amocrm-submit', [AmoAPIController::class, 'formSubmit'])->name('amocrm.submit');
+Route::get('/amocrm-callback', [AmoAPIController::class, 'handleAmoCRMCb'])->name('amocrm.callback');
+Route::get('/amocrm-authorize', [AmoAPIController::class, 'authorizeAMO'])->name('amocrm.authorize');
+
+
+// test
 Route::get('/leads', [AmoAPIController::class, 'getAllLeads'])->name('leads');
 
+// webhooks
 Route::post('/lead_add', [AmoAPIController::class, 'leadAdd'])->name('lead-add');
 Route::post('/contact_add', [AmoAPIController::class, 'contactAdd'])->name('contact-add');

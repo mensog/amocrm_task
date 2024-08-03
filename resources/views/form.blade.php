@@ -1,62 +1,40 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Laravel</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit to AmoCRM</title>
 </head>
-
 <body>
-    <div class="container">
-        <form action="{{ route('form-submit') }}" method="POST" class="w-50 p-5">
-            @csrf
-            <div class="row mb-3">
-                <label for="input-name" class="col-sm-2 col-form-label">Name</label>
-                <div class="col-sm-10">
-                    <input type="text" name="username" class="form-control" id="input-name">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="input-email" class="col-sm-2 col-form-label">Email</label>
-                <div class="col-sm-10">
-                    <input type="email" name="email" class="form-control" id="input-email">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="input-phone" class="col-sm-2 col-form-label">Phone number</label>
-                <div class="col-sm-10">
-                    <input type="tel" name="phone" class="form-control" id="input-phone">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="input-price" class="col-sm-2 col-form-label">Price</label>
-                <div class="col-sm-10">
-                    <input type="number" name="price" class="form-control" id="input-price">
-                </div>
-            </div>
-            <input type="hidden" id="spent_more_than_30s" name="spent_more_than_30s" value="0">
-
-            <button type="submit" class="btn btn-primary">Отправить</button>
-        </form>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+    <form action="{{ route('amocrm.submit') }}" method="POST">
+        @csrf
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required>
+        
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required>
+        
+        <input type="hidden" id="time_spent" name="time_spent" value="0">
+        
+        <button type="submit">Submit</button>
+    </form>
 
     <script>
-        setTimeout(() => {
-            document.getElementById('spent_more_than_30s').value = '1';
-        }, 30000);
+        let startTime = Date.now();
+        
+        window.onload = () => {
+            let form = document.querySelector('form');
+            form.onsubmit = () => {
+                let timeSpent = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('time_spent').value = timeSpent > 30 ? 1 : 0;
+            };
+        };
     </script>
 </body>
-
 </html>
