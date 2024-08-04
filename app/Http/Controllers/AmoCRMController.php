@@ -20,18 +20,14 @@ use AmoCRM\Models\CustomFieldsValues\ValueCollections\CheckboxCustomFieldValueCo
 use AmoCRM\Models\CustomFieldsValues\ValueModels\CheckboxCustomFieldValueModel;
 use AmoCRM\Collections\Leads\LeadsCollection;
 use AmoCRM\Models\LeadModel;
+use App\Adapters\AmoCrmClient;
+use App\Http\Requests\PushLeadRequest;
 
 class AmoCRMController extends Controller
 {
-    private $apiClient;
-
-    public function __construct()
-    {
-        $this->apiClient = new AmoCRMApiClient(
-            env('AMOCRM_CLIENT_ID'),
-            env('AMOCRM_CLIENT_SECRET'),
-            env('AMOCRM_REDIRECT_URI')
-        );
+    public function __construct(
+        private AmoCrmClient $amoCrmClient
+    ) {
     }
 
     public function showForm()
@@ -44,11 +40,11 @@ class AmoCRMController extends Controller
         $state = bin2hex(random_bytes(16));
         session(['oauth2state' => $state]);
 
-        $authorizationUrl = $this->apiClient->getOAuthClient()->getOAuthProvider()->getAuthorizationUrl([
+        $authorizationUrl = $this->amoCrmClient->getOAuthClient()->getOAuthProvider()->getAuthorizationUrl([
             'state' => $state,
             'mode' => 'post_message'
         ]);
-        dd($authorizationUrl);
+
         return redirect()->away($authorizationUrl);
     }
 
@@ -56,7 +52,7 @@ class AmoCRMController extends Controller
     {
         $code = $request->get('code');
         $state = $request->get('state');
-        
+
         if (!$code || !$state || $state !== session('oauth2state')) {
             Log::error('Invalid authorization state or missing authorization code', [
                 'code' => $code,
@@ -67,9 +63,9 @@ class AmoCRMController extends Controller
         }
 
         try {
-            $accessToken = $this->apiClient->getOAuthClient()->getAccessTokenByCode($code, [
-                'redirect_uri' => env('AMOCRM_REDIRECT_URI'),
-            ]);
+            $oauth = $this->amoCrmClient->getOAuthClient();
+            $oauth->setBaseDomain(env("AMOCRM_DOMAIN") . ".amocrm.ru");
+            $accessToken = $oauth->getAccessTokenByCode($code);
             $this->saveToken($accessToken);
             return redirect()->route('amocrm.form')->with('success', 'Authorization successful');
         } catch (AmoCRMoAuthApiException $e) {
@@ -103,73 +99,19 @@ class AmoCRMController extends Controller
         ]);
     }
 
-    public function submitForm(Request $request)
+    public function submitForm(PushLeadRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
-            'price' => 'required|numeric',
-            'time_spent' => 'required|boolean'
-        ]);
-
+        $validated = $request->validated();
         $accessToken = Cache::get('amocrm_access_token');
         if (!$accessToken) {
             return redirect()->route('amocrm.authorize');
         }
 
-        $this->apiClient->setAccessToken($this->getAccessToken());
-        $this->apiClient->setAccountBaseDomain(env('AMOCRM_DOMAIN'));
+        $this->amoCrmClient->setAccessToken($this->getAccessToken());
+        $this->amoCrmClient->setAccountBaseDomain(env('AMOCRM_DOMAIN'));
 
         try {
-            $contactsCollection = new ContactsCollection();
-            $contact = new ContactModel();
-            $contact->setName($validated['name'])
-                ->setCustomFieldsValues(
-                    (new CustomFieldsValuesCollection())
-                        ->add(
-                            (new MultitextCustomFieldValuesModel())
-                                ->setFieldCode('EMAIL')
-                                ->setValues(
-                                    (new MultitextCustomFieldValueCollection())
-                                        ->add((new MultitextCustomFieldValueModel())->setValue($validated['email']))
-                                )
-                        )
-                        ->add(
-                            (new MultitextCustomFieldValuesModel())
-                                ->setFieldCode('PHONE')
-                                ->setValues(
-                                    (new MultitextCustomFieldValueCollection())
-                                        ->add((new MultitextCustomFieldValueModel())->setValue($validated['phone']))
-                                )
-                        )
-                );
-
-            $contactsCollection->add($contact);
-            $contact = $this->apiClient->contacts()->add($contactsCollection)->first();
-
-            $leadsCollection = new LeadsCollection();
-            $lead = new LeadModel();
-            $lead->setName('New Lead')
-                ->setPrice($validated['price'])
-                ->setCustomFieldsValues(
-                    (new CustomFieldsValuesCollection())
-                        ->add(
-                            (new CheckboxCustomFieldValuesModel())
-                                ->setFieldId(env('AMOCRM_TIME_SPENT_FIELD_ID'))
-                                ->setValues(
-                                    (new CheckboxCustomFieldValueCollection())
-                                        ->add((new CheckboxCustomFieldValueModel())->setValue($validated['time_spent']))
-                                )
-                        )
-                )
-                ->setContacts(
-                    (new ContactsCollection())
-                        ->add($contact)
-                );
-
-            $leadsCollection->add($lead);
-            $lead = $this->apiClient->leads()->add($leadsCollection)->first();
+            $this->amoCrmClient->pushLead($validated);
 
             return redirect()->back()->with('success', 'Заявка успешно отправлена в AmoCRM');
         } catch (AmoCRMApiException $e) {

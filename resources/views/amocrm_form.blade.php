@@ -51,15 +51,9 @@
 
 
     <script>
-        let startTime = Date.now();
-        
-        window.onload = () => {
-            let form = document.querySelector('form');
-            form.onsubmit = () => {
-                let timeSpent = Math.floor((Date.now() - startTime) / 1000);
-                document.getElementById('time_spent').value = timeSpent > 30 ? 1 : 0;
-            };
-        };
+        setTimeout(() => {
+            document.getelementById("time_spent").value=1;
+        }, 30000);
     </script>
 </body>
 
