@@ -16,10 +16,11 @@ class CrmServiceProvider extends ServiceProvider
                 config('crm.' . AmoCrm::getKey() . '.client_id'),
                 config('crm.' . AmoCrm::getKey() . '.client_secret'),
                 config('crm.' . AmoCrm::getKey() . '.redirect_uri')
-            ))->setAccountBaseDomain(config('crm.' . AmoCrm::getKey() . '.domain'));
+            ));
 
             if (OAuthService::isValidToken()) {
                 $amoClient->setAccessToken(OAuthService::getAccessToken());
+                $amoClient->setAccountBaseDomain(config('crm.' . AmoCrm::getKey() . '.domain'));
             }
 
             return $amoClient;

@@ -77,9 +77,7 @@
             setTimeout(() => {
                 document.getElementById('time_spent').value = 1;
             }, 30000);
-        }, {
-            once: true
-        });
+        }, { once: true });
     </script>
 </body>
 

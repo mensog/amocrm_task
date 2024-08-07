@@ -4,9 +4,9 @@ namespace App\Crm;
 
 use App\Adapters\AmoCrmClient;
 use App\Exceptions\AmoCrm\TokenNotValidException;
+use App\Services\AmoCrm\OAuthService;
 use App\Interfaces\CrmPushClientInterface;
 use App\Interfaces\CrmInterface;
-use App\Services\AmoCrm\OAuthService;
 
 class AmoCrm implements CrmInterface
 {

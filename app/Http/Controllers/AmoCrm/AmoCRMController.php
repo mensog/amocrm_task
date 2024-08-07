@@ -26,11 +26,10 @@ class AmoCRMController extends Controller
         try {
             $this->oauthService->processToken($request->validated());
             return redirect()->route('lead.create')->with('message', 'Authorization successful');
-
         } catch (AmoCRMoAuthApiException $e) {
-            return redirect()->route('lead.create')->withErrors($e);
+            return redirect()->route('lead.create')->withErrors($e->getTitle());
         } catch (\Exception $e) {
-            return redirect()->route('lead.create')->withErrors($e);
+            return redirect()->route('lead.create')->withErrors($e->getMessage());
         }
     }
 }
