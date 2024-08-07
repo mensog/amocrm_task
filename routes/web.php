@@ -19,10 +19,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/amocrm-form', [AmoCRMController::class, 'showForm'])->name('amocrm.form');
-Route::post('/amocrm-submit', [AmoCRMController::class, 'submitForm'])->name('amocrm.submit');
-Route::get('/amocrm-callback', [AmoCRMController::class, 'handleAmoCRMCb'])->name('amocrm.callback');
-Route::get('/amocrm-authorize', [AmoCRMController::class, 'auth'])->name('amocrm.authorize');
+Route::get('/amocrm/form', [AmoCRMController::class, 'showForm'])->name('amocrm.form');
+Route::get('/amocrm/auth', [AmoCRMController::class, 'auth'])->name('amocrm.authorize');
+Route::get('/amocrm/callback', [AmoCRMController::class, 'handleAmoCRMCb'])->name('amocrm.callback');
+Route::post('/amocrm/submit', [AmoCRMController::class, 'submitForm'])->name('amocrm.submit');
 
 // webhooks
 Route::post('/lead_add', [AmoCRMController::class, 'leadAdd'])->name('lead-add');

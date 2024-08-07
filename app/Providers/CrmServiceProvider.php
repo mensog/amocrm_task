@@ -11,9 +11,9 @@ class CrmServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AmoCrmClient::class, fn () => new AmoCrmClient(
-            config(AmoCrm::getKey() . 'amocrm_client_id'),
-            config(AmoCrm::getKey() . 'amocrm_client_secret'),
-            config(AmoCrm::getKey() . 'amocrm_redirect_uri')
+            config('crm.' . AmoCrm::getKey() . '.client_id'),
+            config('crm.' . AmoCrm::getKey() . '.client_secret'),
+            config('crm.' . AmoCrm::getKey() . '.redirect_uri')
         ));
     }
 

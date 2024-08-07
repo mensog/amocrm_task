@@ -51,9 +51,11 @@
 
 
     <script>
-        setTimeout(() => {
-            document.getelementById("time_spent").value=1;
-        }, 30000);
+        document.getElementById('amocrm-form').addEventListener('input', function() {
+            setTimeout(() => {
+                document.getElementById('time_spent').value = 1;
+            }, 30000);
+        }, { once: true });
     </script>
 </body>
 

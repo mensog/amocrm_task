@@ -5,7 +5,7 @@ namespace App\Builders\AmoCrm;
 use AmoCRM\Collections\CustomFieldsValuesCollection;
 use AmoCRM\Models\ContactModel;
 use AmoCRM\Models\CustomFieldsValues\MultitextCustomFieldValuesModel;
-use App\Interfacas\BuilderInterface;
+use App\Interfaces\BuilderInterface;
 use AmoCRM\Models\CustomFieldsValues\ValueCollections\MultitextCustomFieldValueCollection;
 use AmoCRM\Models\CustomFieldsValues\ValueModels\MultitextCustomFieldValueModel;
 
@@ -22,7 +22,6 @@ class ContactBuilder implements BuilderInterface
     public function setName(string $name): static
     {
         $this->contactModel->setName($name);
-
         return $this;
     }
 

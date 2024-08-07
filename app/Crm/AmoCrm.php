@@ -2,9 +2,9 @@
 
 namespace App\Crm;
 
-use App\Interfacas\CrmPushClientInterface;
-use App\Interfacas\CrmPushInterface;
-use App\Interface\CrmInterface;
+use App\Adapters\AmoCrmClient;
+use App\Interfaces\CrmPushClientInterface;
+use App\Interfaces\CrmInterface;
 
 class AmoCrm implements CrmInterface
 {
@@ -15,6 +15,6 @@ class AmoCrm implements CrmInterface
 
     public static function getClient(): CrmPushClientInterface
     {
-        
+        return app(AmoCrmClient::class);
     }
 }
