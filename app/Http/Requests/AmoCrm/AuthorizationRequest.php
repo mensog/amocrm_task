@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\AmoCrm;
 
-use App\Crm\AmoCrm;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class PushLeadRequest extends FormRequest
+class AuthorizationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +23,8 @@ class PushLeadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'       => 'required|string|max:255',
-            'email'      => 'required|email|max:255',
-            'phone'      => 'required|string|max:20',
-            'price'      => 'required|numeric',
-            'time_spent' => 'required|boolean',
-            'crm'        => ['required', Rule::in([AmoCrm::getKey()])]
+            'code'       => 'required',
+            'state'      => ['required', Rule::in(session('oauth2state'))],
         ];
     }
 }
