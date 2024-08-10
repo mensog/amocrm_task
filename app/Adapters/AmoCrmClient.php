@@ -20,4 +20,5 @@ class AmoCrmClient extends AmoCRMApiClient implements CrmPushClientInterface
 
         return true;
     }
+
 }
