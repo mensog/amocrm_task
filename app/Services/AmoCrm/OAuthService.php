@@ -7,6 +7,7 @@ use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use AmoCRM\OAuth\AmoCRMOAuth;
 use App\Adapters\AmoCrmClient;
+use App\Crm\AmoCrm;
 
 class OAuthService
 {
@@ -31,7 +32,7 @@ class OAuthService
     public function processToken(array $validation): AccessTokenInterface
     {
         $accessToken = $this->oauth->getAccessTokenByCode($validation['code']);
-
+        
         $this->saveToken($accessToken);
 
         return $accessToken;
@@ -47,14 +48,15 @@ class OAuthService
     public static function getAccessToken(): AccessToken
     {
         return new AccessToken([
-            'access_token'  => Cache::get('amocrm_access_token') ?? 'token',
+            'access_token'  => Cache::get('amocrm_access_token'),
             'refresh_token' => Cache::get('amocrm_refresh_token'),
             'expires'       => Cache::get('amocrm_expires'),
+            'baseDomain'    => AmoCrm::getConfig('domain')
         ]);
     }
 
     public static function isValidToken(): bool
     {
-        return Cache::get('amocrm_access_token') ? self::getAccessToken()->hasExpired() : false;
+        return Cache::get('amocrm_access_token') ? !self::getAccessToken()->hasExpired() : false;
     }
 }

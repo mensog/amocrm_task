@@ -3,6 +3,7 @@
 namespace App\Interfaces;
 
 use App\Adapters\AmoCrmClient;
+use Illuminate\Support\Facades\Config;
 
 interface CrmInterface
 {
@@ -11,4 +12,6 @@ interface CrmInterface
      * @return \App\Interfaces\CrmPushClientInterface|AmoCrmClient
      */
     public static function getClient(): CrmPushClientInterface;
+
+    public static function getConfig(string $key): string;
 }

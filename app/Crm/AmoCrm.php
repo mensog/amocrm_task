@@ -7,6 +7,7 @@ use App\Exceptions\AmoCrm\TokenNotValidException;
 use App\Services\AmoCrm\OAuthService;
 use App\Interfaces\CrmPushClientInterface;
 use App\Interfaces\CrmInterface;
+use Illuminate\Support\Facades\Config;
 
 class AmoCrm implements CrmInterface
 {
@@ -22,5 +23,10 @@ class AmoCrm implements CrmInterface
         }
 
         return app(AmoCrmClient::class);
+    }
+
+    public static function getConfig(string $key): string
+    {
+        return config('crm.' . self::getKey() . ".$key");
     }
 }

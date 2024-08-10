@@ -40,7 +40,7 @@ class LeadBuilder implements BuilderInterface
     {
         $this->fields->add(
             (new CheckboxCustomFieldValuesModel())
-                ->setFieldId(config('crm.' . AmoCrm::getKey() . '.time_spent_field_id'))
+                ->setFieldId(AmoCrm::getConfig('time_spent_field_id'))
                 ->setValues(
                     (new CheckboxCustomFieldValueCollection())
                         ->add((new CheckboxCustomFieldValueModel())->setValue($time_spent))

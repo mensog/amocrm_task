@@ -23,11 +23,11 @@ class AuthorizationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code'        => 'required',
-            'state'       => ['required', Rule::in(session('oauth2state'))],
-            'referer'     => 'required',
-            // 'from_widget' => 'required',
-            'platform'    => 'required',
+            'code'       => 'required',
+            'state'      => 'required',
+            'referer'    => 'required',
+            'platform'   => 'required',
+            // 'from_widget'=> 'required',
         ];
     }
 }

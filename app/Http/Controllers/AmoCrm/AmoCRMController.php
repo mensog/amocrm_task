@@ -6,6 +6,7 @@ use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AmoCrm\AuthorizationRequest;
 use App\Services\AmoCrm\OAuthService;
+use Illuminate\Http\Request;
 
 class AmoCRMController extends Controller
 {
@@ -17,7 +18,6 @@ class AmoCRMController extends Controller
     public function redirectToOAuth()
     {
         $authUrl = $this->oauthService->getAuthorizationUrl();
-        
         return redirect()->away($authUrl);
     }
 

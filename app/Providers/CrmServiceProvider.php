@@ -13,14 +13,14 @@ class CrmServiceProvider extends ServiceProvider
     {
         $this->app->bind(AmoCrmClient::class, function () {
             $amoClient = (new AmoCrmClient(
-                config('crm.' . AmoCrm::getKey() . '.client_id'),
-                config('crm.' . AmoCrm::getKey() . '.client_secret'),
-                config('crm.' . AmoCrm::getKey() . '.redirect_uri')
+                AmoCrm::getConfig('client_id'),
+                AmoCrm::getConfig('client_secret'),
+                AmoCrm::getConfig('redirect_uri')
             ));
 
             if (OAuthService::isValidToken()) {
                 $amoClient->setAccessToken(OAuthService::getAccessToken());
-                $amoClient->setAccountBaseDomain(config('crm.' . AmoCrm::getKey() . '.domain'));
+                $amoClient->setAccountBaseDomain(AmoCrm::getConfig('domain'));
             }
 
             return $amoClient;
