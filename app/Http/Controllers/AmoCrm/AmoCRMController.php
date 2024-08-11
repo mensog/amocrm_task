@@ -24,8 +24,10 @@ class AmoCRMController extends Controller
     public function authorizationOAuth(Request $request)
     {
         try {
+            $this->oauthService->setBaseDomain();
             $this->oauthService->processToken($request);
-            return redirect()->route('lead.create')->with('message', 'Authorization successful');
+            
+            return redirect()->route('lead.create')->with('message', 'Успешная авторизация!');
         } catch (AmoCRMoAuthApiException $e) {
             return redirect()->route('lead.create')->withErrors($e->getLastRequestInfo());
         } catch (\Exception $e) {

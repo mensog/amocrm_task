@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <div class="container d-flex justify-content-center text-center">
+    <div class="container">
         @if ($errors->any())
             <div class="errors">
                 <ul>
@@ -25,11 +25,13 @@
                 </ul>
             </div>
         @endif
-        @if (isset($message))
+        @if (session('message'))
             <div class="text-center alert alert-success" role="alert">
-                {{ $message }}
+                {{ session('message') }}
             </div>
         @endif
+    </div>
+    <div class="container d-flex justify-content-center text-center">
         <form action="{{ route('lead.store') }}" method="POST" class="w-50 p-5" id="amocrm-form">
             @csrf
             <div class="row mb-3">
@@ -77,7 +79,25 @@
             setTimeout(() => {
                 document.getElementById('time_spent').value = 1;
             }, 30000);
-        }, { once: true });
+        }, {
+            once: true
+        });
+
+        function hideElementsAfterDelay(selector, delay) {
+            setTimeout(function() {
+                document.querySelectorAll(selector).forEach(function(element) {
+                    element.style.transition = 'opacity 0.5s ease';
+                    element.style.opacity = '0';
+                    setTimeout(() => {
+                        element.remove();
+                    }, 500);
+                });
+            }, delay);
+        }
+
+        hideElementsAfterDelay('.alert-success', 6000);
+
+        hideElementsAfterDelay('.alert-danger', 10000);
     </script>
 </body>
 

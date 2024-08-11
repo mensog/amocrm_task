@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use AmoCRM\Exceptions\AmoCRMApiException;
-use App\Exceptions\AmoCrm\TokenNotValidException;
 use App\Http\Requests\PushLeadRequest;
 use App\Services\LeadService;
 use Exception;
@@ -26,8 +25,9 @@ class LeadController extends Controller
     {
         try {
             $this->service->submitLeadForm($request->validated());
-            return redirect()->back()->with(['message' => __('Success')]);
+            return redirect()->back()->with('message', __('Сделка создана!'));
         } catch (AmoCRMApiException | Exception $e) {
+            // $request->session()->put('lead_data', $request->validated());
             return redirect()->route('amocrm.redirectoauth');
         }
     }

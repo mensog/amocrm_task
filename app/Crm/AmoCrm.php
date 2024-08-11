@@ -27,7 +27,6 @@ class AmoCrm implements CrmInterface
 
     public static function getConfig(string $key): string
     {
-        dump(config('crm.' . self::getKey() . ".$key"));
         return config('crm.' . self::getKey() . ".$key");
     }
 }

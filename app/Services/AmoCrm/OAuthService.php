@@ -12,9 +12,9 @@ class OAuthService
 {
     private AmoCrmClient $apiClient;
 
-    public function __construct() {
-        // dump(app(AmoCrmClient::class)->setAccountBaseDomain(AmoCrm::getConfig('domain')));
-        $this->apiClient = app(AmoCrmClient::class)->setAccountBaseDomain(AmoCrm::getConfig('domain'));
+    public function __construct()
+    {
+        $this->apiClient = app(AmoCrmClient::class);
     }
 
     public function getAuthorizationUrl(): string
@@ -31,7 +31,6 @@ class OAuthService
 
     public function processToken($validation): AccessTokenInterface
     {
-        // dd($this->apiClient, $validation);
         $accessToken = $this->apiClient->getOAuthClient()->getAccessTokenByCode($validation['code']);
         $this->saveToken($accessToken);
 
@@ -58,5 +57,11 @@ class OAuthService
     public static function isValidToken(): bool
     {
         return Cache::get('amocrm_access_token') ? !self::getAccessToken()->hasExpired() : false;
+    }
+
+    public function setBaseDomain()
+    {
+        $this->apiClient->setAccountBaseDomain(AmoCrm::getConfig('domain'));
+        return $this;
     }
 }

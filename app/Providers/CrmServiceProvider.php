@@ -19,7 +19,7 @@ class CrmServiceProvider extends ServiceProvider
             ));
 
             if (OAuthService::isValidToken()) {
-                $amoClient->getOAuthClient()->setBaseDomain(AmoCrm::getConfig('domain'));
+                $amoClient->setAccountBaseDomain(AmoCrm::getConfig('domain'));
                 $amoClient->setAccessToken(OAuthService::getAccessToken());
             }
 
