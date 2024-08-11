@@ -21,13 +21,13 @@ class AmoCRMController extends Controller
         return redirect()->away($authUrl);
     }
 
-    public function authorizationOAuth(AuthorizationRequest $request)
+    public function authorizationOAuth(Request $request)
     {
         try {
-            $this->oauthService->processToken($request->validated());
+            $this->oauthService->processToken($request);
             return redirect()->route('lead.create')->with('message', 'Authorization successful');
         } catch (AmoCRMoAuthApiException $e) {
-            return redirect()->route('lead.create')->withErrors($e->getTitle());
+            return redirect()->route('lead.create')->withErrors($e->getLastRequestInfo());
         } catch (\Exception $e) {
             return redirect()->route('lead.create')->withErrors($e->getMessage());
         }

@@ -5,16 +5,16 @@ namespace App\Services\AmoCrm;
 use Illuminate\Support\Facades\Cache;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use League\OAuth2\Client\Token\AccessToken;
-use AmoCRM\OAuth\AmoCRMOAuth;
 use App\Adapters\AmoCrmClient;
 use App\Crm\AmoCrm;
 
 class OAuthService
 {
-    private AmoCRMOAuth $oauth;
+    private AmoCrmClient $apiClient;
 
     public function __construct() {
-        $this->oauth = app(AmoCrmClient::class)->getOAuthClient();
+        // dump(app(AmoCrmClient::class)->setAccountBaseDomain(AmoCrm::getConfig('domain')));
+        $this->apiClient = app(AmoCrmClient::class)->setAccountBaseDomain(AmoCrm::getConfig('domain'));
     }
 
     public function getAuthorizationUrl(): string
@@ -23,16 +23,16 @@ class OAuthService
 
         session(['oauth2state' => $state]);
 
-        return $this->oauth->getAuthorizeUrl([
+        return $this->apiClient->getOAuthClient()->getAuthorizeUrl([
             'state' => $state,
             'mode' => 'post_message'
         ]);
     }
 
-    public function processToken(array $validation): AccessTokenInterface
+    public function processToken($validation): AccessTokenInterface
     {
-        $accessToken = $this->oauth->getAccessTokenByCode($validation['code']);
-        
+        // dd($this->apiClient, $validation);
+        $accessToken = $this->apiClient->getOAuthClient()->getAccessTokenByCode($validation['code']);
         $this->saveToken($accessToken);
 
         return $accessToken;

@@ -24,7 +24,7 @@ class AuthorizationRequest extends FormRequest
     {
         return [
             'code'       => 'required',
-            'state'      => 'required',
+            // 'state'      => 'required',
             'referer'    => 'required',
             'platform'   => 'required',
             // 'from_widget'=> 'required',
